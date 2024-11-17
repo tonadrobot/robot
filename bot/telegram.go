@@ -19,7 +19,7 @@ func initTelegram(key string) *telebot.Bot {
 		log.Fatal(err)
 	}
 
-	// b.Handle("/start", commandStart)
+	b.Handle("/start", commandStart)
 
 	return b
 }
