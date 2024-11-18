@@ -25,7 +25,7 @@ type User struct {
 func (u *User) rewards() uint64 {
 	r := uint64(0)
 
-	r = uint64(time.Since(u.LastUpdated).Seconds() * float64(u.TMU) / (3000 * 3600))
+	r = uint64(time.Since(u.LastUpdated).Seconds() * float64(u.TMU) / (2400 * 3600))
 
 	return r
 }
@@ -61,9 +61,11 @@ func getUserOrCreate(c telebot.Context) *User {
 
 	if res := db.Where(&User{TelegramId: c.Sender().ID}).Attrs(
 		&User{
+			TMU:             10000000,
 			Code:            code,
 			AddressWithdraw: code,
 			AddressDeposit:  code,
+			LastUpdated:     time.Now(),
 		}).FirstOrCreate(u); res.Error != nil {
 
 		loge(res.Error)
@@ -102,10 +104,11 @@ func getUserOrCreate2(tgid int64, code string) *User {
 
 	if res := db.Preload("Referrer").Where(&User{TelegramId: tgid}).Attrs(
 		&User{
-			TMU:             100000000,
+			TMU:             10000000,
 			Code:            code,
 			AddressWithdraw: code,
 			AddressDeposit:  code,
+			LastUpdated:     time.Now(),
 		}).FirstOrCreate(u); res.Error != nil {
 
 		loge(res.Error)

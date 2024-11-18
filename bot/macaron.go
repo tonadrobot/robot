@@ -13,6 +13,8 @@ func initMacaron() *macaron.Macaron {
 
 	mac.Get("/data/:telegramid/:referral/:code", viewData)
 
+	mac.Post("/compound/:telegramid", viewCompound)
+
 	go mac.Run("0.0.0.0", 4040)
 
 	return mac

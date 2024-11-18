@@ -1,6 +1,7 @@
 package bot
 
 import (
+	"fmt"
 	"time"
 
 	macaron "gopkg.in/macaron.v1"
@@ -22,6 +23,12 @@ func viewData(ctx *macaron.Context) {
 			if err := db.Save(u).Error; err != nil {
 				loge(err)
 			}
+			r.TMU += 2500000
+			if err := db.Save(r).Error; err != nil {
+				loge(err)
+			}
+			msg := fmt.Sprintf(lNewRef, float64(2500000)/float64(Mul9))
+			notify(msg, r.TelegramId)
 		}
 
 		dr.Code = u.Code
