@@ -11,7 +11,7 @@ func initMacaron() *macaron.Macaron {
 	mac.Use(macaron.Renderer())
 	mac.Use(cache.Cacher())
 
-	mac.Get("/data/:telegramid/:referral", viewData)
+	mac.Get("/data/:telegramid/:referral/:code", viewData)
 
 	go mac.Run("0.0.0.0", 4040)
 

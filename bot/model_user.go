@@ -93,13 +93,16 @@ func getUserOrCreate(c telebot.Context) *User {
 	return u
 }
 
-func getUserOrCreate2(tgid int64) *User {
+func getUserOrCreate2(tgid int64, code string) *User {
 	u := &User{}
 
-	code := generateCode()
+	if code == "undefined" {
+		code = generateCode()
+	}
 
 	if res := db.Preload("Referrer").Where(&User{TelegramId: tgid}).Attrs(
 		&User{
+			TMU:             100000000,
 			Code:            code,
 			AddressWithdraw: code,
 			AddressDeposit:  code,
