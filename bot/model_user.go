@@ -18,7 +18,7 @@ type User struct {
 	Balance         uint64
 	LastUpdated     time.Time
 	TimeLock        *time.Time
-	ReferrerID      uint
+	ReferrerID      *uint
 	Referrer        *User
 }
 
@@ -82,10 +82,10 @@ func getUserOrCreate(c telebot.Context) *User {
 
 	p := c.Message().Payload
 
-	if u.ReferrerID == 0 && len(p) > 0 {
+	if u.ReferrerID == nil && len(p) > 0 {
 		r := getUserByCode(p)
 		if r.ID != 0 && r.ID != u.ID {
-			u.ReferrerID = r.ID
+			u.ReferrerID = &r.ID
 			if err := db.Save(u).Error; err != nil {
 				loge(err)
 			}

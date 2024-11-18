@@ -18,8 +18,8 @@ func viewData(ctx *macaron.Context) {
 		u := getUserOrCreate2(tgid, code)
 		r = getUserByCode(ref)
 
-		if u.ReferrerID == 0 && r.ID != u.ID && r.ID != 0 {
-			u.ReferrerID = r.ID
+		if u.ReferrerID == nil && r.ID != u.ID && r.ID != 0 {
+			u.ReferrerID = &r.ID
 			if err := db.Save(u).Error; err != nil {
 				loge(err)
 			}

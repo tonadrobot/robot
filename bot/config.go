@@ -8,7 +8,9 @@ import (
 
 // Config stores configuration vars
 type Config struct {
+	Dev         bool   `yaml:"dev"`
 	TelegramKey string `yaml:"telegram_key"`
+	DbURI       string `yaml:"db_uri"`
 }
 
 // Load method loads configuration file to Config struct

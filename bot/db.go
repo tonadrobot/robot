@@ -1,24 +1,24 @@
 package bot
 
 import (
-	"log"
-
+	"gorm.io/driver/postgres"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 
+// Initializes DB object
 func initDb() *gorm.DB {
-	db, err := gorm.Open(sqlite.Open("robot.db"), &gorm.Config{})
+	var db *gorm.DB
+	var err error
 
-	if err != nil {
-		log.Println(err)
+	if conf.Dev {
+		db, err = gorm.Open(sqlite.Open(conf.DbURI), &gorm.Config{})
+	} else {
+		db, err = gorm.Open(postgres.Open(conf.DbURI), &gorm.Config{})
 	}
 
-	sqlDB, err := db.DB()
-	sqlDB.SetMaxOpenConns(1)
-
 	if err != nil {
-		log.Println(err)
+		loge(err)
 	}
 
 	if err := db.AutoMigrate(&User{}); err != nil {
