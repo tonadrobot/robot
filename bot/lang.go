@@ -9,5 +9,5 @@ const (
 
 	lNewUser = "New TON Ad user. 🚀"
 
-	lNewMint = "New TON Ad TMU mint: %.9f TON. 🚀"
+	lNewMint = "New TON Ad TMU mint: %.9f TMU. 🚀"
 )
