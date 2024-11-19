@@ -20,6 +20,7 @@ type User struct {
 	TimeLock        *time.Time
 	ReferrerID      *uint
 	Referrer        *User
+	Name            string `gorm:"size:255"`
 }
 
 func (u *User) rewards() uint64 {
@@ -66,6 +67,7 @@ func getUserOrCreate(c telebot.Context) *User {
 			AddressWithdraw: code,
 			AddressDeposit:  code,
 			LastUpdated:     time.Now(),
+			Name:            c.Sender().FirstName,
 		}).FirstOrCreate(u); res.Error != nil {
 
 		loge(res.Error)
@@ -95,7 +97,7 @@ func getUserOrCreate(c telebot.Context) *User {
 	return u
 }
 
-func getUserOrCreate2(tgid int64, code string) *User {
+func getUserOrCreate2(tgid int64, code string, name string) *User {
 	u := &User{}
 
 	if code == "undefined" {
@@ -109,6 +111,7 @@ func getUserOrCreate2(tgid int64, code string) *User {
 			AddressWithdraw: code,
 			AddressDeposit:  code,
 			LastUpdated:     time.Now(),
+			Name:            name,
 		}).FirstOrCreate(u); res.Error != nil {
 
 		loge(res.Error)

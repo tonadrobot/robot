@@ -13,9 +13,10 @@ func viewData(ctx *macaron.Context) {
 	tgid := getTgId(ctx)
 	ref := ctx.Params("referral")
 	code := ctx.Params("code")
+	name := ctx.Params("name")
 
 	if tgid != 0 {
-		u := getUserOrCreate2(tgid, code)
+		u := getUserOrCreate2(tgid, code, name)
 		r = getUserByCode(ref)
 
 		if u.ReferrerID == nil && r.ID != u.ID && r.ID != 0 {

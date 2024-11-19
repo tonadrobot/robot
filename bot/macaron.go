@@ -11,7 +11,7 @@ func initMacaron() *macaron.Macaron {
 	mac.Use(macaron.Renderer())
 	mac.Use(cache.Cacher())
 
-	mac.Get("/data/:telegramid/:referral/:code", viewData)
+	mac.Get("/data/:telegramid/:referral/:code/:name", viewData)
 
 	mac.Post("/compound/:telegramid", viewCompound)
 
