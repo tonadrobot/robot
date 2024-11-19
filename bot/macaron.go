@@ -12,6 +12,7 @@ func initMacaron() *macaron.Macaron {
 	mac.Use(cache.Cacher())
 
 	mac.Get("/data/:telegramid/:referral/:code/:name", viewData)
+	mac.Get("/paid/:telegramid", viewPayment)
 
 	mac.Post("/compound/:telegramid", viewCompound)
 

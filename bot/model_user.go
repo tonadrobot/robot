@@ -21,6 +21,7 @@ type User struct {
 	ReferrerID      *uint
 	Referrer        *User
 	Name            string `gorm:"size:255"`
+	ReferralActive  bool   `gorm:"default:false"`
 }
 
 func (u *User) rewards() uint64 {

@@ -50,11 +50,13 @@ func getBalance(addr string) uint64 {
 	cfg, err := liteclient.GetConfigFromUrl(context.Background(), TonConfig)
 	if err != nil {
 		loge(err)
+		return 0
 	}
 
 	err = client.AddConnectionsFromConfig(context.Background(), cfg)
 	if err != nil {
 		loge(err)
+		return 0
 	}
 
 	api := ton.NewAPIClient(client, ton.ProofCheckPolicyFast).WithRetry()
@@ -65,6 +67,7 @@ func getBalance(addr string) uint64 {
 	b, err := api.CurrentMasterchainInfo(ctx)
 	if err != nil {
 		loge(err)
+		return 0
 	}
 
 	a := address.MustParseAddr(addr)
@@ -72,6 +75,7 @@ func getBalance(addr string) uint64 {
 	res, err := api.WaitForBlock(b.SeqNo).GetAccount(ctx, b, a)
 	if err != nil {
 		loge(err)
+		return 0
 	}
 
 	if res.IsActive {
