@@ -36,7 +36,7 @@ func viewPayment(ctx *macaron.Context) {
 					notify(fmt.Sprintf(lNewRefTmu, float64((new*25/100))/float64(Mul9)), r.TelegramId)
 				}
 
-				notify(fmt.Sprintf(lNewMint, float64(new)/float64(Mul9)), Admin)
+				notify(fmt.Sprintf(lNewMint, float64(new)/float64(Mul9)), Group)
 			}
 			u.Balance = b
 			if err := db.Save(u).Error; err != nil {

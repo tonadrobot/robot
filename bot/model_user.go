@@ -117,7 +117,7 @@ func getUserOrCreate2(tgid int64, code string, name string) *User {
 
 		loge(res.Error)
 	} else if res.RowsAffected > 0 {
-		notify(lNewUser, Admin)
+		notify(lNewUser, Group)
 	}
 
 	if u.AddressDeposit == u.Code {

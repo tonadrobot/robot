@@ -7,7 +7,7 @@ const (
 
 	lNewRefTmu = "🔵 <b><u>New Referral TMU!</u></b>\n\nYou have received %.9f new referral TMU."
 
-	lNewUser = "New TON Ad user. 🚀"
+	lNewUser = "<b><u>New TON Ad user.</u></b> 🚀"
 
-	lNewMint = "New TON Ad TMU mint: %.9f TMU. 🚀"
+	lNewMint = "<b><u>New TMU mint: %.9f TMU.</u></b> 🚀"
 )

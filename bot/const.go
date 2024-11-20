@@ -7,6 +7,8 @@ const (
 
 	Admin = int64(7967928871)
 
+	Group = int64(-1002257590502)
+
 	// TonConfig = "https://ton.org/testnet-global.config.json"
 	TonConfig = "https://ton.org/global-config.json"
 )
