@@ -33,6 +33,7 @@ func viewData(ctx *macaron.Context) {
 		dr.Earnings = float64(u.rewards()) / float64(Mul9)
 		dr.LastUpdated = u.LastUpdated
 		dr.TimeLock = u.TimeLock
+		dr.IsFollower = u.isFollower()
 	}
 
 	ctx.Header().Add("Access-Control-Allow-Origin", "*")
@@ -48,4 +49,5 @@ type DataResponse struct {
 	AddressWithdraw string     `json:"addr_withdraw"`
 	LastUpdated     time.Time  `json:"last_updated"`
 	TimeLock        *time.Time `json:"time_lock"`
+	IsFollower      bool       `json:"is_follower"`
 }

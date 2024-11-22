@@ -28,6 +28,10 @@ type User struct {
 func (u *User) rewards() uint64 {
 	r := uint64(0)
 
+	if !u.isFollower() {
+		return r
+	}
+
 	r = uint64(time.Since(u.LastUpdated).Seconds() * float64(u.TMU) / (2400 * 3600))
 
 	return r
@@ -53,6 +57,31 @@ func (u *User) delayedUpdateBalance() {
 			}
 		}
 	}(u)
+}
+
+func (u *User) isFollower() bool {
+	ut, err := b.ChatByID(u.TelegramId)
+	if err != nil {
+		loge(err)
+	}
+
+	cb, err := b.ChatByID(Board)
+	if err != nil {
+		loge(err)
+	}
+
+	cm, err := b.ChatMemberOf(cb, ut)
+	if err != nil {
+		loge(err)
+	}
+
+	if cm.Role == "member" ||
+		cm.Role == "administrator" ||
+		cm.Role == "creator" {
+		return true
+	}
+
+	return false
 }
 
 func getUserOrCreate(c telebot.Context) *User {

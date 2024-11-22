@@ -9,6 +9,8 @@ const (
 
 	Group = int64(-1002257590502)
 
+	Board = int64(-1001717915246)
+
 	AddressReward = "UQBUli6jlzab570r5LK2zFPejtdATwmFB3FofriHxmLYZphf"
 
 	AddressTonAd = "UQALCxTkDbNMwLV29fgV0ZzEI9YOgREnFg94Q70OSnRPNhf-"
