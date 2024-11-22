@@ -21,6 +21,7 @@ func initTelegram(key string) *telebot.Bot {
 
 	b.Handle("/start", commandStart)
 	b.Handle("/stats", commandStats)
+	b.Handle("/ranks", commandRanks)
 
 	return b
 }
