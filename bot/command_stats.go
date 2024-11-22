@@ -1,8 +1,17 @@
 package bot
 
-import "gopkg.in/telebot.v3"
+import (
+	"fmt"
+
+	"gopkg.in/telebot.v3"
+)
 
 func commandStats(c telebot.Context) error {
-	_, err := b.Send(c.Sender(), "stats", telebot.NoPreview)
+	count := int64(0)
+	db.Find(&User{}).Count(&count)
+
+	msg := fmt.Sprintf(lStats, count)
+
+	_, err := b.Send(c.Chat(), msg, telebot.NoPreview)
 	return err
 }

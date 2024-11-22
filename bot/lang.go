@@ -10,4 +10,8 @@ const (
 	lNewUser = "<b><u>New TON Ad user.</u></b> 🚀"
 
 	lNewMint = "<b><u>New TMU mint: %.9f TMU.</u></b> 🚀"
+
+	lStats = `🔵 <b><u>TON Ad Basic Stats</u></b>
+
+<b>Users:</b> %d`
 )
