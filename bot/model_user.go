@@ -22,6 +22,7 @@ type User struct {
 	Referrer        *User
 	Name            string `gorm:"size:255"`
 	ReferralActive  bool   `gorm:"default:false"`
+	CompoundCount   uint64
 }
 
 func (u *User) rewards() uint64 {
@@ -34,6 +35,7 @@ func (u *User) rewards() uint64 {
 
 func (u *User) compound() {
 	u.TMU += u.rewards()
+	u.CompoundCount++
 	u.LastUpdated = time.Now()
 	if err := db.Save(u).Error; err != nil {
 		loge(err)
