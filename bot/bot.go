@@ -29,5 +29,8 @@ func Start() {
 
 	logs("Bot started successfully. 🚀")
 
+	bal := getBalance("UQDR7UXF6LHH5sWCl6t7t8Bh8q5G4Ge5U3BgimTNIFb86Ky-")
+	log.Println(bal)
+
 	b.Start()
 }

@@ -14,34 +14,36 @@ func viewPayment(ctx *macaron.Context) {
 	if tgid != 0 {
 		u := getUserOrCreate2(tgid, "", "")
 		b := getBalance(u.AddressDeposit)
-		if u.Balance != b {
-			if b > u.Balance {
-				new := (b - u.Balance)
-				new *= 10
-				u.TMU += new
-				now := time.Now()
-				u.TimeLock = &now
-				pr.Success = true
+		new := int64(b - u.Balance)
 
-				if time.Since(u.LastUpdated).Hours() > (60 * 24) {
-					u.LastUpdated = now
-				}
+		u.Balance = b
+		if err := db.Save(u).Error; err != nil {
+			loge(err)
+		}
 
-				if u.ReferrerID != nil {
-					r := u.Referrer
-					r.TMU += (new * 25 / 100)
-					if err := db.Save(r).Error; err != nil {
-						loge(err)
-					}
-					notify(fmt.Sprintf(lNewRefTmu, float64((new*25/100))/float64(Mul9)), r.TelegramId)
-				}
+		if new > 0 {
+			new *= 10
+			u.TMU += uint64(new)
+			now := time.Now()
+			u.TimeLock = &now
+			pr.Success = true
 
-				notify(fmt.Sprintf(lNewMint, float64(new)/float64(Mul9)), Group)
+			if time.Since(u.LastUpdated).Hours() > (60 * 24) {
+				u.LastUpdated = now
 			}
-			u.Balance = b
-			if err := db.Save(u).Error; err != nil {
-				loge(err)
+
+			if u.ReferrerID != nil {
+				r := u.Referrer
+				r.TMU += (uint64(new) * 25 / 100)
+				if err := db.Save(r).Error; err != nil {
+					loge(err)
+				}
+				notify(fmt.Sprintf(lNewRefTmu, float64((new*25/100))/float64(Mul9)), r.TelegramId)
 			}
+
+			notify(fmt.Sprintf(lNewMint, float64(new)/float64(Mul9)), Group)
+
+			go splitPayment(b, u)
 		}
 	}
 

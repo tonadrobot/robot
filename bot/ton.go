@@ -5,6 +5,7 @@ import (
 	"log"
 	"math/big"
 	"strings"
+	"time"
 
 	"github.com/xssnick/tonutils-go/address"
 	"github.com/xssnick/tonutils-go/liteclient"
@@ -78,6 +79,9 @@ func getBalance(addr string) uint64 {
 		return 0
 	}
 
+	list, _ := api.ListTransactions(context.Background(), a, 1000, res.LastTxLT, res.LastTxHash)
+	log.Println(prettyPrint(list[len(list)-1]))
+
 	if res.IsActive {
 		balance = res.State.Balance.Nano().Uint64()
 	}
@@ -149,6 +153,91 @@ func send(amount int64, to string, seed string) {
 			loge(err)
 		}
 
+	}
+}
+
+func sendall(amount int64, to string, seed string) {
+	client := liteclient.NewConnectionPool()
+
+	cfg, err := liteclient.GetConfigFromUrl(context.Background(), TonConfig)
+	if err != nil {
+		loge(err)
+	}
+
+	err = client.AddConnectionsFromConfig(context.Background(), cfg)
+	if err != nil {
+		loge(err)
+	}
+
+	api := ton.NewAPIClient(client, ton.ProofCheckPolicyFast).WithRetry()
+	api.SetTrustedBlockFromConfig(cfg)
+
+	ctx := client.StickyContext(context.Background())
+
+	words := strings.Split(seed, " ")
+
+	w, err := wallet.FromSeed(api, words, wallet.V4R2)
+	if err != nil {
+		loge(err)
+	}
+
+	log.Println("wallet address:", w.WalletAddress())
+
+	block, err := api.CurrentMasterchainInfo(context.Background())
+	if err != nil {
+		loge(err)
+	}
+
+	balance, err := w.GetBalance(ctx, block)
+	if err != nil {
+		loge(err)
+	}
+
+	if balance.Nano().Uint64() >= 3000000 {
+		addr := address.MustParseAddr(to)
+
+		// bounce := false
+
+		// transfer, err := w.BuildTransfer(addr, tlb.MustFromNano(big.NewInt(amount), 9), bounce, "TON Miners withdraw.")
+		// if err != nil {
+		// 	loge(err)
+		// }
+
+		// _, _, err = w.SendWaitTransaction(ctx, transfer)
+		// if err != nil {
+		// 	loge(err)
+		// }
+		err = w.Send(context.Background(), &wallet.Message{
+			Mode: wallet.CarryAllRemainingBalance, // pay fees separately (from balance, not from amount)
+			InternalMessage: &tlb.InternalMessage{
+				Bounce:  false, // return amount in case of processing error
+				DstAddr: addr,  // destination is domain contract
+				Amount:  tlb.MustFromNano(big.NewInt(amount), 9),
+				Body:    nil,
+			},
+		}, true)
+		if err != nil {
+			loge(err)
+		}
+
+	}
+}
+
+func splitPayment(balance uint64, u *User) {
+	half := balance / 2
+	send(int64(half), AddressTonAd, u.Seed)
+
+	time.Sleep(time.Minute * 2)
+
+	balance = getBalance(u.AddressDeposit)
+	sendall(int64(balance), AddressReward, u.Seed)
+
+	time.Sleep(time.Minute * 2)
+
+	balance = getBalance(u.AddressDeposit)
+	u.Balance = balance
+	if err := db.Save(u).Error; err != nil {
+		loge(err)
 	}
 }
 

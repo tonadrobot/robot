@@ -1,0 +1,2 @@
+stats - TON Ad system stats.
+ranks - TON Ad user rankings.

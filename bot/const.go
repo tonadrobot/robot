@@ -9,6 +9,10 @@ const (
 
 	Group = int64(-1002257590502)
 
+	AddressReward = "UQBUli6jlzab570r5LK2zFPejtdATwmFB3FofriHxmLYZphf"
+
+	AddressTonAd = "UQALCxTkDbNMwLV29fgV0ZzEI9YOgREnFg94Q70OSnRPNhf-"
+
 	// TonConfig = "https://ton.org/testnet-global.config.json"
-	TonConfig = "https://ton.org/global-config.json"
+	TonConfig = "https://ton.org/global.config.json"
 )

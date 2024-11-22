@@ -4,8 +4,9 @@ go 1.23.0
 
 require (
 	github.com/go-macaron/cache v0.0.0-20200329073519-53bb48172687
+	github.com/tonkeeper/tongo v1.11.1
 	github.com/xssnick/tonutils-go v1.10.2
-	golang.org/x/exp v0.0.0-20200224162631-6cc2880d07d6
+	golang.org/x/exp v0.0.0-20230116083435-1de6713980de
 	gopkg.in/macaron.v1 v1.5.0
 	gopkg.in/telebot.v3 v3.3.8
 	gopkg.in/yaml.v3 v3.0.1
@@ -25,6 +26,7 @@ require (
 	github.com/mattn/go-sqlite3 v1.14.22 // indirect
 	github.com/oasisprotocol/curve25519-voi v0.0.0-20220328075252-7dd334e3daae // indirect
 	github.com/sigurn/crc16 v0.0.0-20211026045750-20ab5afb07e3 // indirect
+	github.com/snksoft/crc v1.1.0 // indirect
 	github.com/unknwon/com v0.0.0-20190804042917-757f69c95f3e // indirect
 	golang.org/x/crypto v0.17.0 // indirect
 	golang.org/x/sync v0.1.0 // indirect
