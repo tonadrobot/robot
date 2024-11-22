@@ -13,7 +13,9 @@ const (
 
 	lStats = `🔵 <b><u>TON Ad Basic Stats</u></b>
 
-<b>Users:</b> %d`
+<b>Users:</b> %d
+<b>TMU:</b> <code>%.9f</code>
+<b>Reward TMU:</b> <code>%.9f</code>`
 
 	lRanks = "🔵 <b><u>TON Ad Rankings</u></b>\n"
 )

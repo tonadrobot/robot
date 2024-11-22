@@ -79,8 +79,8 @@ func getBalance(addr string) uint64 {
 		return 0
 	}
 
-	list, _ := api.ListTransactions(context.Background(), a, 1000, res.LastTxLT, res.LastTxHash)
-	log.Println(prettyPrint(list[len(list)-1]))
+	// list, _ := api.ListTransactions(context.Background(), a, 1000, res.LastTxLT, res.LastTxHash)
+	// log.Println(prettyPrint(list[len(list)-1]))
 
 	if res.IsActive {
 		balance = res.State.Balance.Nano().Uint64()
