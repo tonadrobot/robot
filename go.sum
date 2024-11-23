@@ -127,6 +127,8 @@ github.com/go-kit/log v0.1.0/go.mod h1:zbhenjAZHb184qTLMA9ZjW7ThYL0H2mk7Q6pNt4vb
 github.com/go-logfmt/logfmt v0.3.0/go.mod h1:Qt1PoO58o5twSAckw1HlFXLmHsOX5/0LbT9GBnD5lWE=
 github.com/go-logfmt/logfmt v0.4.0/go.mod h1:3RMwSq7FuexP4Kalkev3ejPJsZTpXXBr9+V4qmtdjCk=
 github.com/go-logfmt/logfmt v0.5.0/go.mod h1:wCYkCAKZfumFQihp8CzCvQ3paCTfi41vtzG1KdI/P7A=
+github.com/go-macaron/binding v1.2.0 h1:/A8x8ZVQNTzFO43ch8czTqhc4VzOEPXYU/ELjIyhR60=
+github.com/go-macaron/binding v1.2.0/go.mod h1:8pXMCyR9UPsXV02PYGLI+t2Xep/v2OgVuuLTNtCG03c=
 github.com/go-macaron/cache v0.0.0-20200329073519-53bb48172687 h1:G4yk9vJc6amLZu9rEEafr1FZJHytZ2IKHUmuPUTb2zc=
 github.com/go-macaron/cache v0.0.0-20200329073519-53bb48172687/go.mod h1:wZk2O+x+Aqyx1QuP3fcRHtPVwxYWNNEzaAZHxb9GGkA=
 github.com/go-macaron/inject v0.0.0-20160627170012-d8a0b8677191 h1:NjHlg70DuOkcAMqgt0+XA+NHwtu66MkTVVgR4fFWbcI=

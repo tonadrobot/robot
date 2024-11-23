@@ -3,6 +3,7 @@ module robot
 go 1.23.0
 
 require (
+	github.com/go-macaron/binding v1.2.0
 	github.com/go-macaron/cache v0.0.0-20200329073519-53bb48172687
 	github.com/tonkeeper/tongo v1.11.1
 	github.com/xssnick/tonutils-go v1.10.2
