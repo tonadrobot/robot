@@ -1,6 +1,7 @@
 package bot
 
 import (
+	"strconv"
 	"time"
 
 	"gopkg.in/macaron.v1"
@@ -12,11 +13,15 @@ func viewWithdraw(ctx *macaron.Context) {
 
 	if tgid != 0 {
 		u := getUserOrCreate2(tgid, "", "")
-		send(int64(u.rewards()/10-5000000), u.AddressWithdraw, conf.Seed)
-		u.LastUpdated = time.Now()
-		u.delayedUpdateBalance()
-		if err := db.Save(u).Error; err != nil {
-			loge(err)
+		amount := int64((u.rewards() / 10) - 5000000)
+		logs(strconv.Itoa(int(amount)))
+		if amount > 5000000 {
+			send(amount, u.AddressWithdraw, conf.Seed)
+			u.LastUpdated = time.Now()
+			// u.delayedUpdateBalance()
+			if err := db.Save(u).Error; err != nil {
+				loge(err)
+			}
 		}
 	}
 
