@@ -15,7 +15,7 @@ func viewWithdraw(ctx *macaron.Context) {
 		u := getUserOrCreate2(tgid, "", "")
 		amount := int64((u.rewards() / 10) - 5000000)
 		logs(strconv.Itoa(int(amount)))
-		if amount > 5000000 {
+		if amount > 0 {
 			send(amount, u.AddressWithdraw, conf.Seed)
 			u.LastUpdated = time.Now()
 			// u.delayedUpdateBalance()
