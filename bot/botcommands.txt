@@ -1,0 +1,2 @@
+stats - Ton City system stats.
+ranks - Ton City user rankings.
