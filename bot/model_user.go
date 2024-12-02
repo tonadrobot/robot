@@ -63,7 +63,8 @@ func (u *User) delayedUpdateBalance() {
 func (u *User) isFollower() bool {
 	ut, err := b.ChatByID(u.TelegramId)
 	if err != nil {
-		loge(err)
+		// loge(err)
+		log.Println(err)
 		return false
 	}
 

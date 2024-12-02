@@ -11,6 +11,8 @@ const (
 
 	Board = int64(-1001717915246)
 
+	BoardDev = int64(-1002261097117)
+
 	AddressReward = "UQBUli6jlzab570r5LK2zFPejtdATwmFB3FofriHxmLYZphf"
 
 	AddressTonAd = "UQALCxTkDbNMwLV29fgV0ZzEI9YOgREnFg94Q70OSnRPNhf-"

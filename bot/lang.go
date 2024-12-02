@@ -19,10 +19,19 @@ const (
 
 	lRanks = "🔵 <b><u>Ton City Rankings</u></b>\n"
 
-	lMigrate = `🔵 <b><u>App Migration</u></b>
-	
-Dear user, please notice that this bot has been migrated to @TonCityRobot and app to t.me/TonCityRobot/miner.
+	lRestartMining = `Mine More TON! 🚀
 
-Click one of the links or button bellow this message to migrate and use @TonCityRobot from now on.
-	`
+<b><u>Each referred miner increases your mining power by 25% of their TMU!</u></b>
+
+Invite your friends to Ton City and you will receive 25% of their TMU. You can find your referral link in the app.
+
+Click the button bellow to restart the mining cycle!`
+
+	lStartMining = `<b><u>Start Mining TON</u></b> 🚀
+
+Current price of 1 TMU (Ton Mining Unit) is 0.1 TON. In 3 days it will be 0.25 TON and in few month 1 TON.
+
+<b><u>Start mining TON by clicking the button bellow and receive 0.01 TMU for free!</u></b>
+
+<u>This is the magic of compound interest.</u> If you receive 0.01 TMU and compound daily, after one year you will have 0.38 TMU. After two years, you will have 14.27 TMU, after three years, you will have 539.39 TMU and after five years 770029.12 TMU.`
 )
