@@ -29,10 +29,5 @@ func Start() {
 
 	logs("Bot started successfully. 🚀")
 
-	// var users []*User
-	// db.Find(&users)
-
-	// notifyold(lMigrate, Admin)
-
 	b.Start()
 }
