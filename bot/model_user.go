@@ -10,20 +10,22 @@ import (
 
 type User struct {
 	gorm.Model
-	TelegramId      int64  `gorm:"size:255;uniqueIndex"`
-	Code            string `gorm:"size:255;uniqueIndex"`
-	AddressWithdraw string `gorm:"size:255;uniqueIndex"`
-	AddressDeposit  string `gorm:"size:255;uniqueIndex"`
-	Seed            string `gorm:"size:255"`
-	TMU             uint64
-	Balance         uint64
-	LastUpdated     time.Time
-	TimeLock        *time.Time
-	ReferrerID      *uint
-	Referrer        *User
-	Name            string `gorm:"size:255"`
-	ReferralActive  bool   `gorm:"default:false"`
-	CompoundCount   uint64
+	TelegramId       int64  `gorm:"size:255;uniqueIndex"`
+	Code             string `gorm:"size:255;uniqueIndex"`
+	AddressWithdraw  string `gorm:"size:255;uniqueIndex"`
+	AddressDeposit   string `gorm:"size:255;uniqueIndex"`
+	Seed             string `gorm:"size:255"`
+	TMU              uint64
+	Balance          uint64
+	LastUpdated      time.Time
+	TimeLock         *time.Time
+	ReferrerID       *uint
+	Referrer         *User
+	Name             string `gorm:"size:255"`
+	ReferralActive   bool   `gorm:"default:false"`
+	CompoundCount    uint64
+	MiningTime       time.Time `gorm:"default:'2024-12-03 23:00:00.390330053+01:00'"`
+	LastNotification time.Time `gorm:"default:'2024-12-03 23:00:00.390330053+01:00'"`
 }
 
 func (u *User) rewards() uint64 {

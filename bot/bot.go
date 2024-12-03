@@ -13,6 +13,8 @@ var b *telebot.Bot
 
 var db *gorm.DB
 
+var m *Monitor
+
 // Package init function
 func init() {
 	conf = initConfig()
@@ -20,6 +22,8 @@ func init() {
 	db = initDb()
 
 	b = initTelegram(conf.TelegramKey)
+
+	m = initMonitor()
 
 	initMacaron()
 }
@@ -29,18 +33,18 @@ func Start() {
 
 	logs("Bot started successfully. 🚀")
 
-	var users []*User
-	db.Find(&users)
-	counter := 0
+	// var users []*User
+	// db.Find(&users)
+	// counter := 0
 
-	for _, u := range users {
-		if !u.hasMigrated() {
-			counter++
-			log.Printf("%d Not: %s", counter, u.Name)
-		}
-	}
+	// for _, u := range users {
+	// 	if !u.hasMigrated() {
+	// 		counter++
+	// 		log.Printf("%d Not: %s", counter, u.Name)
+	// 	}
+	// }
 
-	notifystart(lStartMining, Admin)
+	// notifytest(lRestartMining, BoardDev)
 
 	b.Start()
 }

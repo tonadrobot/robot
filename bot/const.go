@@ -19,4 +19,7 @@ const (
 
 	// TonConfig = "https://ton.org/testnet-global.config.json"
 	TonConfig = "https://ton.org/global.config.json"
+
+	// MonitorTick interval in seconds
+	MonitorTick = 60
 )
