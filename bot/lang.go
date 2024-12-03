@@ -29,7 +29,7 @@ Click the button bellow to restart the mining cycle!`
 
 	lStartMining = `<b><u>Start Mining TON</u></b> 🚀
 
-Current price of 1 TMU (Ton Mining Unit) is 0.1 TON. In 3 days it will be 0.25 TON and in few month 1 TON.
+Current price of 1 TMU (Ton Mining Unit) is 0.1 TON. In 3 days it will be 0.25 TON and in few months 1 TON.
 
 <b><u>Start mining TON by clicking the button bellow and receive 0.01 TMU for free!</u></b>
 
