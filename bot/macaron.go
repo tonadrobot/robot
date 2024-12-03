@@ -18,6 +18,7 @@ func initMacaron() *macaron.Macaron {
 	mac.Post("/save/:telegramid", binding.Bind(UserForm{}), viewSave)
 	mac.Post("/compound/:telegramid", viewCompound)
 	mac.Post("/withdraw/:telegramid", viewWithdraw)
+	mac.Post("/restart/:telegramid", viewRestart)
 
 	go mac.Run("0.0.0.0", 4040)
 

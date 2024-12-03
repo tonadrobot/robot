@@ -13,8 +13,6 @@ var b *telebot.Bot
 
 var db *gorm.DB
 
-var m *Monitor
-
 // Package init function
 func init() {
 	conf = initConfig()
@@ -23,7 +21,7 @@ func init() {
 
 	b = initTelegram(conf.TelegramKey)
 
-	m = initMonitor()
+	initMonitor()
 
 	initMacaron()
 }
