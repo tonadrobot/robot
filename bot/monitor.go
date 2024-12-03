@@ -82,7 +82,7 @@ func (m *Monitor) minerExists(telId int64) bool {
 }
 
 func (m *Monitor) start() {
-	m.loadMiners()
+	// m.loadMiners()
 
 	// total := 0
 

@@ -26,6 +26,12 @@ func viewData(ctx *macaron.Context) {
 			notify(lNewRef, r.TelegramId)
 		}
 
+		if time.Since(u.MiningTime).Minutes() <= 1410 {
+			dr.CycleActive = true
+		} else {
+			dr.CycleActive = false
+		}
+
 		dr.Code = u.Code
 		dr.AddressDeposit = u.AddressDeposit
 		dr.AddressWithdraw = u.AddressWithdraw
@@ -52,4 +58,5 @@ type DataResponse struct {
 	TimeLock        *time.Time `json:"time_lock"`
 	IsFollower      bool       `json:"is_follower"`
 	IsMember        bool       `json:"is_member"`
+	CycleActive     bool       `json:"cycle_active"`
 }

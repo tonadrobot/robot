@@ -24,8 +24,8 @@ type User struct {
 	Name             string `gorm:"size:255"`
 	ReferralActive   bool   `gorm:"default:false"`
 	CompoundCount    uint64
-	MiningTime       time.Time `gorm:"default:'2024-12-03 23:00:00.390330053+01:00'"`
-	LastNotification time.Time `gorm:"default:'2024-12-03 23:00:00.390330053+01:00'"`
+	MiningTime       time.Time `gorm:"default:'2024-12-03 16:00:00.390330053+01:00'"`
+	LastNotification time.Time `gorm:"default:'2024-12-03 16:00:00.390330053+01:00'"`
 }
 
 func (u *User) rewards() uint64 {
