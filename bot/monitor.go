@@ -32,7 +32,6 @@ func (m *Monitor) sendNotifications() {
 }
 
 func (m *Monitor) isSending(miner *User) bool {
-	log.Println(time.Since(miner.MiningTime).Minutes())
 	if miner.ID != 0 &&
 		time.Since(miner.MiningTime).Minutes() > 1410 &&
 		time.Since(miner.MiningTime).Minutes() < 1440 &&

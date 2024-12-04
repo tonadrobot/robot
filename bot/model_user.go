@@ -140,12 +140,14 @@ func getUserOrCreate(c telebot.Context) *User {
 
 	if res := db.Where(&User{TelegramId: c.Sender().ID}).Attrs(
 		&User{
-			TMU:             10000000,
-			Code:            code,
-			AddressWithdraw: code,
-			AddressDeposit:  code,
-			LastUpdated:     time.Now(),
-			Name:            c.Sender().FirstName,
+			TMU:              10000000,
+			Code:             code,
+			AddressWithdraw:  code,
+			AddressDeposit:   code,
+			LastUpdated:      time.Now(),
+			LastNotification: time.Now(),
+			MiningTime:       time.Now(),
+			Name:             c.Sender().FirstName,
 		}).FirstOrCreate(u); res.Error != nil {
 
 		loge(res.Error)
@@ -185,12 +187,14 @@ func getUserOrCreate2(tgid int64, code string, name string) *User {
 
 	if res := db.Preload("Referrer").Where(&User{TelegramId: tgid}).Attrs(
 		&User{
-			TMU:             10000000,
-			Code:            code,
-			AddressWithdraw: code,
-			AddressDeposit:  code,
-			LastUpdated:     time.Now(),
-			Name:            name,
+			TMU:              10000000,
+			Code:             code,
+			AddressWithdraw:  code,
+			AddressDeposit:   code,
+			LastUpdated:      time.Now(),
+			LastNotification: time.Now(),
+			MiningTime:       time.Now(),
+			Name:             name,
 		}).FirstOrCreate(u); res.Error != nil {
 
 		loge(res.Error)

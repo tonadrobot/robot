@@ -1,7 +1,6 @@
 package bot
 
 import (
-	"fmt"
 	"log"
 	"time"
 
@@ -64,6 +63,17 @@ func getMiningButton() *telebot.ReplyMarkup {
 	return rm
 }
 
+func getRestartButton() *telebot.ReplyMarkup {
+	rm := &telebot.ReplyMarkup{}
+	btn := rm.URL("⚪️ Restart Mining", "https://t.me/DevTonCityBoard/6")
+
+	rm.Inline(
+		rm.Row(btn),
+	)
+
+	return rm
+}
+
 func getStartButton() *telebot.ReplyMarkup {
 	rm := &telebot.ReplyMarkup{}
 	btn := rm.URL("⚪️ Start Mining TON", "https://t.me/TonCityRobot/miner")
@@ -76,13 +86,13 @@ func getStartButton() *telebot.ReplyMarkup {
 }
 
 func notifyEnd(tgid int64) {
+	rb := getRestartButton()
+
 	rec := &telebot.Chat{
 		ID: tgid,
 	}
 
-	msg := fmt.Sprintf(lCycleFinished, 6)
-
-	_, err := b.Send(rec, msg, telebot.NoPreview)
+	_, err := b.Send(rec, lCycleFinished, rb, telebot.NoPreview)
 	if err != nil {
 		loge(err)
 	}

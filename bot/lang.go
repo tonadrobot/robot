@@ -35,9 +35,9 @@ Current price of 1 TMU (Ton Mining Unit) is 0.1 TON. In 3 days it will be 0.25 T
 
 <u>This is the magic of compound interest.</u> If you receive 0.01 TMU and compound daily, after one year you will have 0.38 TMU. After two years, you will have 14.27 TMU, after three years, you will have 539.39 TMU and after five years 770029.12 TMU.`
 
-	lCycleFinished = `Your mining cycle has ended.
+	lCycleFinished = `Your daily mining cycle has ended. Please run it again to continue mining!
 
-Please run it again in next 24 hours to collect the reward from last cycle.
+<b><u>Remember that this is an opportunity to do a compound too.</u></b>
 
-You restart mining by clicking the button at <a href="https://t.me/DevTonCityBoard/%d">Ton City Board</a> channel. 🚀`
+Restart mining by clicking the button bellow and then button on the channel once again. 🚀`
 )
