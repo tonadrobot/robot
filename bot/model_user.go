@@ -24,7 +24,7 @@ type User struct {
 	Name             string `gorm:"size:255"`
 	ReferralActive   bool   `gorm:"default:false"`
 	CompoundCount    uint64
-	CycleCount       uint64    `gorm:"default:2"`
+	CycleCount       uint64
 	MiningTime       time.Time `gorm:"default:'2024-12-03 16:00:00.390330053+01:00'"`
 	LastNotification time.Time `gorm:"default:'2024-12-03 16:00:00.390330053+01:00'"`
 }
