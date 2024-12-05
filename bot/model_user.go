@@ -24,6 +24,7 @@ type User struct {
 	Name             string `gorm:"size:255"`
 	ReferralActive   bool   `gorm:"default:false"`
 	CompoundCount    uint64
+	CycleCount       uint64    `gorm:"default:2"`
 	MiningTime       time.Time `gorm:"default:'2024-12-03 16:00:00.390330053+01:00'"`
 	LastNotification time.Time `gorm:"default:'2024-12-03 16:00:00.390330053+01:00'"`
 }
@@ -66,7 +67,7 @@ func (u *User) isFollower() bool {
 	ut, err := b.ChatByID(u.TelegramId)
 	if err != nil {
 		// loge(err)
-		log.Println(err)
+		// log.Println(err)
 		return false
 	}
 
@@ -128,6 +129,10 @@ func (u *User) hasMigrated() bool {
 	}
 
 	return true
+}
+
+func (u *User) isActive() bool {
+	return time.Since(u.MiningTime).Minutes() <= 2280
 }
 
 func getUserOrCreate(c telebot.Context) *User {

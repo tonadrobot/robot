@@ -14,13 +14,18 @@ func (c *Cache) loadStatsCache() {
 	var users []*User
 	db.Find(&users)
 	count := len(users)
+	countActive := 0
 
 	for _, u := range users {
 		tmu += (float64(u.TMU) / float64(Mul9))
 		reward += (float64(u.rewards()) / float64(Mul9))
+		if u.isActive() {
+			countActive++
+		}
 	}
 
 	c.StatsCache.Miners = count
+	c.StatsCache.ActiveMiners = countActive
 	c.StatsCache.TMU = tmu
 	c.StatsCache.RewardTMU = reward
 }
