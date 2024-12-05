@@ -41,6 +41,8 @@ func viewData(ctx *macaron.Context) {
 		dr.TimeLock = u.TimeLock
 		dr.IsFollower = u.isFollower()
 		dr.IsMember = u.isMember()
+		dr.CycleCount = u.CycleCount
+		dr.MiningTime = u.MiningTime
 	}
 
 	ctx.Header().Add("Access-Control-Allow-Origin", "*")
@@ -59,4 +61,6 @@ type DataResponse struct {
 	IsFollower      bool       `json:"is_follower"`
 	IsMember        bool       `json:"is_member"`
 	CycleActive     bool       `json:"cycle_active"`
+	CycleCount      uint64     `json:"cycle_count"`
+	MiningTime      time.Time  `json:"mining_time"`
 }

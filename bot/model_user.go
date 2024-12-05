@@ -25,6 +25,7 @@ type User struct {
 	ReferralActive   bool   `gorm:"default:false"`
 	CompoundCount    uint64
 	CycleCount       uint64
+	CycleCountTotal  uint64
 	MiningTime       time.Time `gorm:"default:'2024-12-03 16:00:00.390330053+01:00'"`
 	LastNotification time.Time `gorm:"default:'2024-12-03 16:00:00.390330053+01:00'"`
 }
@@ -38,12 +39,23 @@ func (u *User) rewards() uint64 {
 
 	r = uint64(time.Since(u.LastUpdated).Seconds() * float64(u.TMU) / (2400 * 3600))
 
+	cycleIndex := float64(u.CycleCount) / float64(time.Since(u.MiningTime).Hours()/24)
+	if cycleIndex > 1 {
+		cycleIndex = 1
+	}
+
+	// log.Printf("cycle index: %s %.9f", u.Name, cycleIndex)
+
+	r = uint64(float64(r) * cycleIndex)
+
 	return r
 }
 
 func (u *User) compound() {
 	u.TMU += u.rewards()
 	u.CompoundCount++
+	u.CycleCountTotal += u.CycleCount
+	u.CycleCount = 1
 	u.LastUpdated = time.Now()
 	if err := db.Save(u).Error; err != nil {
 		loge(err)

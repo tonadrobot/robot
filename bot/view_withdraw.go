@@ -18,6 +18,8 @@ func viewWithdraw(ctx *macaron.Context) {
 		if amount > 0 {
 			send(amount, u.AddressWithdraw, conf.Seed)
 			u.LastUpdated = time.Now()
+			u.CycleCountTotal += u.CycleCount
+			u.CycleCount = 1
 			// u.delayedUpdateBalance()
 			if err := db.Save(u).Error; err != nil {
 				loge(err)
