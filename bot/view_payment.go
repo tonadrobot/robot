@@ -32,6 +32,10 @@ func viewPayment(ctx *macaron.Context) {
 				u.LastUpdated = now
 			}
 
+			if err := db.Save(u).Error; err != nil {
+				loge(err)
+			}
+
 			if u.ReferrerID != nil {
 				r := u.Referrer
 				r.TMU += (uint64(new) * 25 / 100)
