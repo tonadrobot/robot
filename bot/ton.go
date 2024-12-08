@@ -14,7 +14,7 @@ import (
 	"github.com/xssnick/tonutils-go/ton/wallet"
 )
 
-func generateSeedAddress() (seeds string, addr string) {
+func generateSeedAddress() (seeds string, addr string, err error) {
 	seed := wallet.NewSeed()
 	seeds = strings.Join(seed, " ")
 
@@ -23,11 +23,13 @@ func generateSeedAddress() (seeds string, addr string) {
 	cfg, err := liteclient.GetConfigFromUrl(context.Background(), TonConfig)
 	if err != nil {
 		loge(err)
+		return "", "", err
 	}
 
 	err = client.AddConnectionsFromConfig(context.Background(), cfg)
 	if err != nil {
 		loge(err)
+		return "", "", err
 	}
 
 	api := ton.NewAPIClient(client, ton.ProofCheckPolicyFast).WithRetry()
@@ -36,11 +38,12 @@ func generateSeedAddress() (seeds string, addr string) {
 	w, err := wallet.FromSeed(api, seed, wallet.V4R2)
 	if err != nil {
 		loge(err)
+		return "", "", err
 	}
 
 	addr = w.WalletAddress().String()
 
-	return seeds, addr
+	return seeds, addr, nil
 }
 
 func getBalance(addr string) uint64 {

@@ -12,7 +12,7 @@ func viewWithdraw(ctx *macaron.Context) {
 	tgid := getTgId(ctx)
 
 	if tgid != 0 {
-		u := getUserOrCreate2(tgid, "", "")
+		u := getUser(tgid)
 		amount := int64((u.rewards() / 10) - 5000000)
 		logs(strconv.Itoa(int(amount)))
 		if amount > 0 {

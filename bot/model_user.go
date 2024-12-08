@@ -147,7 +147,7 @@ func (u *User) isActive() bool {
 	return time.Since(u.MiningTime).Minutes() <= 2280
 }
 
-func getUserOrCreate(c telebot.Context) *User {
+func getUserOrCreate(c telebot.Context) (*User, error) {
 	u := &User{}
 
 	code := c.Sender().Username
@@ -168,15 +168,20 @@ func getUserOrCreate(c telebot.Context) *User {
 		}).FirstOrCreate(u); res.Error != nil {
 
 		loge(res.Error)
+		return u, res.Error
 	}
 
 	if u.AddressDeposit == u.Code {
 		notify(lNewUser, Group)
-		s, a := generateSeedAddress()
+		s, a, err := generateSeedAddress()
+		if err != nil {
+			return u, err
+		}
 		u.AddressDeposit = a
 		u.Seed = s
 		if err := db.Save(u).Error; err != nil {
 			loge(err)
+			return u, err
 		}
 	}
 
@@ -188,14 +193,15 @@ func getUserOrCreate(c telebot.Context) *User {
 			u.ReferrerID = &r.ID
 			if err := db.Save(u).Error; err != nil {
 				loge(err)
+				return u, err
 			}
 		}
 	}
 
-	return u
+	return u, nil
 }
 
-func getUserOrCreate2(tgid int64, code string, name string) *User {
+func getUserOrCreate2(tgid int64, code string, name string) (*User, error) {
 	u := &User{}
 
 	if code == "undefined" {
@@ -215,25 +221,40 @@ func getUserOrCreate2(tgid int64, code string, name string) *User {
 		}).FirstOrCreate(u); res.Error != nil {
 
 		loge(res.Error)
+		return u, res.Error
 	}
 
 	if u.AddressDeposit == u.Code {
-		notify(lNewUser, Group)
-		s, a := generateSeedAddress()
+		s, a, err := generateSeedAddress()
+		if err != nil {
+			return u, err
+		}
 		u.AddressDeposit = a
 		u.Seed = s
 		if err := db.Save(u).Error; err != nil {
 			loge(err)
+			if err != nil {
+				return u, err
+			}
 		}
+		notify(lNewUser, Group)
 	}
 
-	return u
+	return u, nil
 }
 
 func getUserByCode(code string) *User {
 	u := &User{}
 
 	db.First(u, &User{Code: code})
+
+	return u
+}
+
+func getUser(tgid int64) *User {
+	u := &User{}
+
+	db.First(u, &User{TelegramId: tgid})
 
 	return u
 }

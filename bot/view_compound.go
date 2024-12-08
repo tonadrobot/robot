@@ -11,7 +11,7 @@ func viewCompound(ctx *macaron.Context) {
 	tgid := getTgId(ctx)
 
 	if tgid != 0 {
-		u := getUserOrCreate2(tgid, "", "")
+		u := getUser(tgid)
 		u.compound()
 
 		r := u.Referrer

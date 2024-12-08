@@ -15,34 +15,36 @@ func viewData(ctx *macaron.Context) {
 	name := ctx.Params("name")
 
 	if tgid != 0 {
-		u := getUserOrCreate2(tgid, code, name)
-		r = getUserByCode(ref)
+		u, err := getUserOrCreate2(tgid, code, name)
+		if err == nil {
+			r = getUserByCode(ref)
 
-		if u.ReferrerID == nil && r.ID != u.ID && r.ID != 0 {
-			u.ReferrerID = &r.ID
-			if err := db.Save(u).Error; err != nil {
-				loge(err)
+			if u.ReferrerID == nil && r.ID != u.ID && r.ID != 0 {
+				u.ReferrerID = &r.ID
+				if err := db.Save(u).Error; err != nil {
+					loge(err)
+				}
+				notify(lNewRef, r.TelegramId)
 			}
-			notify(lNewRef, r.TelegramId)
-		}
 
-		if time.Since(u.MiningTime).Minutes() <= 1410 {
-			dr.CycleActive = true
-		} else {
-			dr.CycleActive = false
-		}
+			if time.Since(u.MiningTime).Minutes() <= 1410 {
+				dr.CycleActive = true
+			} else {
+				dr.CycleActive = false
+			}
 
-		dr.Code = u.Code
-		dr.AddressDeposit = u.AddressDeposit
-		dr.AddressWithdraw = u.AddressWithdraw
-		dr.TMU = float64(u.TMU) / float64(Mul9)
-		dr.Earnings = float64(u.rewards()) / float64(Mul9)
-		dr.LastUpdated = u.LastUpdated
-		dr.TimeLock = u.TimeLock
-		dr.IsFollower = u.isFollower()
-		dr.IsMember = u.isMember()
-		dr.CycleCount = u.CycleCount
-		dr.MiningTime = u.MiningTime
+			dr.Code = u.Code
+			dr.AddressDeposit = u.AddressDeposit
+			dr.AddressWithdraw = u.AddressWithdraw
+			dr.TMU = float64(u.TMU) / float64(Mul9)
+			dr.Earnings = float64(u.rewards()) / float64(Mul9)
+			dr.LastUpdated = u.LastUpdated
+			dr.TimeLock = u.TimeLock
+			dr.IsFollower = u.isFollower()
+			dr.IsMember = u.isMember()
+			dr.CycleCount = u.CycleCount
+			dr.MiningTime = u.MiningTime
+		}
 	}
 
 	ctx.Header().Add("Access-Control-Allow-Origin", "*")

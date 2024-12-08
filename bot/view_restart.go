@@ -11,7 +11,7 @@ func viewRestart(ctx *macaron.Context) {
 	tgid := getTgId(ctx)
 
 	if tgid != 0 {
-		u := getUserOrCreate2(tgid, "", "")
+		u := getUser(tgid)
 
 		if time.Since(u.MiningTime).Minutes() > 1410 {
 			u.MiningTime = time.Now()

@@ -12,7 +12,7 @@ func viewPayment(ctx *macaron.Context) {
 	tgid := getTgId(ctx)
 
 	if tgid != 0 {
-		u := getUserOrCreate2(tgid, "", "")
+		u := getUser(tgid)
 		b := getBalance(u.AddressDeposit)
 		new := int64(b - u.Balance)
 

@@ -15,7 +15,7 @@ func viewSave(user UserForm, ctx *macaron.Context) {
 		sr.Success = false
 	} else {
 		if tgid != 0 {
-			u := getUserOrCreate2(tgid, "", "")
+			u := getUser(tgid)
 			u.AddressWithdraw = user.AddressWithdraw
 			if err := db.Save(u).Error; err != nil {
 				loge(err)
