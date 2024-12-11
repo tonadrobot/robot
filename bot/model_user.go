@@ -54,7 +54,9 @@ func (u *User) rewards() uint64 {
 func (u *User) compound() {
 	u.TMU += u.rewards()
 	u.CompoundCount++
-	u.CycleCountTotal += u.CycleCount
+	if u.CycleCount > 0 {
+		u.CycleCountTotal += (u.CycleCount - 1)
+	}
 	u.CycleCount = 1
 	u.LastUpdated = time.Now()
 	if err := db.Save(u).Error; err != nil {
