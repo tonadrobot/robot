@@ -2,6 +2,7 @@ package bot
 
 import (
 	"context"
+	"encoding/hex"
 	"log"
 	"math/big"
 	"strings"
@@ -20,7 +21,7 @@ func generateSeedAddress() (seeds string, addr string, err error) {
 
 	client := liteclient.NewConnectionPool()
 
-	cfg, err := liteclient.GetConfigFromUrl(context.Background(), TonConfig)
+	cfg, err := liteclient.GetConfigFromUrl(context.Background(), getTonConfig())
 	if err != nil {
 		loge(err)
 		return "", "", err
@@ -51,7 +52,7 @@ func getBalance(addr string) uint64 {
 
 	client := liteclient.NewConnectionPool()
 
-	cfg, err := liteclient.GetConfigFromUrl(context.Background(), TonConfig)
+	cfg, err := liteclient.GetConfigFromUrl(context.Background(), getTonConfig())
 	if err != nil {
 		loge(err)
 		return 0
@@ -95,7 +96,7 @@ func getBalance(addr string) uint64 {
 func send(amount int64, to string, seed string) {
 	client := liteclient.NewConnectionPool()
 
-	cfg, err := liteclient.GetConfigFromUrl(context.Background(), TonConfig)
+	cfg, err := liteclient.GetConfigFromUrl(context.Background(), getTonConfig())
 	if err != nil {
 		loge(err)
 	}
@@ -162,7 +163,7 @@ func send(amount int64, to string, seed string) {
 func sendall(amount int64, to string, seed string) {
 	client := liteclient.NewConnectionPool()
 
-	cfg, err := liteclient.GetConfigFromUrl(context.Background(), TonConfig)
+	cfg, err := liteclient.GetConfigFromUrl(context.Background(), getTonConfig())
 	if err != nil {
 		loge(err)
 	}
@@ -248,7 +249,7 @@ func splitPayment(balance uint64, u *User) {
 // 	client := liteclient.NewConnectionPool()
 
 // 	// get config
-// 	cfg, err := liteclient.GetConfigFromUrl(context.Background(), TonConfig)
+// 	cfg, err := liteclient.GetConfigFromUrl(context.Background(), getTonConfig())
 // 	if err != nil {
 // 		log.Fatalln("get config err: ", err.Error())
 // 	}
@@ -319,3 +320,111 @@ func splitPayment(balance uint64, u *User) {
 
 // 	log.Println("not enough balance:", balance.String())
 // }
+
+func processTransactions(addr string) {
+	client := liteclient.NewConnectionPool()
+
+	cfg, err := liteclient.GetConfigFromUrl(context.Background(), getTonConfig())
+	if err != nil {
+		loge(err)
+		return
+	}
+
+	// connect to mainnet lite servers
+	err = client.AddConnectionsFromConfig(context.Background(), cfg)
+	if err != nil {
+		loge(err)
+		return
+	}
+
+	// initialize ton api lite connection wrapper with full proof checks
+	api := ton.NewAPIClient(client, ton.ProofCheckPolicyFast).WithRetry()
+	api.SetTrustedBlockFromConfig(cfg)
+
+	master, err := api.CurrentMasterchainInfo(context.Background()) // we fetch block just to trigger chain proof check
+	if err != nil {
+		loge(err)
+		return
+	}
+
+	// address on which we are accepting payments
+	treasuryAddress := address.MustParseAddr(addr)
+
+	acc, err := api.GetAccount(context.Background(), master, treasuryAddress)
+	if err != nil {
+		loge(err)
+		return
+	}
+
+	// Cursor of processed transaction, save it to your db
+	// We start from last transaction, will not process transactions older than we started from.
+	// After each processed transaction, save lt to your db, to continue after restart
+	lastProcessedLT := acc.LastTxLT
+	// lastProcessedLT := uint64(28970514000003)
+	// channel with new transactions
+	// transactions := make(chan *tlb.Transaction)
+
+	// it is a blocking call, so we start it asynchronously
+	// go api.SubscribeOnTransactions(context.Background(), treasuryAddress, lastProcessedLT, transactions)
+	// hash, _ := hex.DecodeString("655abbdaba882076a649fae19a351cee53bfcbd22d79a908a8365ec7fe9e93ee")
+	transactions, err := api.ListTransactions(context.Background(), treasuryAddress, 10, lastProcessedLT, acc.LastTxHash)
+	if err != nil {
+		loge(err)
+		return
+	}
+
+	// log.Println("waiting for transfers...")
+
+	// USDT master contract addr, but can be any jetton
+	// usdt := jetton.NewJettonMasterClient(api, address.MustParseAddr("EQCxE6mUtQJKFnGfaROTKOt1lZbDiiX1kCixRv7Nw2Id_sDs"))
+	// get our jetton wallet address
+	// treasuryJettonWallet, err := usdt.GetJettonWalletAtBlock(context.Background(), treasuryAddress, master)
+	// if err != nil {
+	// 	log.Fatalln("get jetton wallet address err: ", err.Error())
+	// 	return
+	// }
+
+	// tonWallet, err := wallet.from
+
+	// listen for new transactions from channel
+	for _, tx := range transactions {
+		// only internal messages can increase the balance
+		if tx.IO.In != nil && tx.IO.In.MsgType == tlb.MsgTypeInternal {
+			ti := tx.IO.In.AsInternal()
+			src := ti.SrcAddr
+
+			// verify that event sender is our jetton wallet
+			// if ti.SrcAddr.Equals(treasuryJettonWallet.Address()) {
+			// 	var transfer jetton.TransferNotification
+			// 	if err = tlb.LoadFromCell(&transfer, ti.Body.BeginParse()); err == nil {
+			// 		// convert decimals to 6 for USDT (it can be fetched from jetton details too), default is 9
+			// 		amt := tlb.MustFromNano(transfer.Amount.Nano(), 6)
+
+			// 		// reassign sender to real jetton sender instead of its jetton wallet contract
+			// 		src = transfer.Sender
+			// 		log.Println("received", amt.String(), "USDT from", src.String())
+			// 	}
+			// }
+
+			// show received ton amount
+			log.Println("received", ti.Amount.String(), "TON from", src.String())
+		}
+
+		// update last processed lt and save it in db
+		lastProcessedLT = tx.LT
+		log.Println(hex.EncodeToString(tx.Hash))
+		log.Println(lastProcessedLT)
+
+		processTx(hex.EncodeToString(tx.Hash), tx.LT)
+
+		log.Println(isTxProcessed(hex.EncodeToString(tx.Hash), tx.LT))
+	}
+}
+
+func getTonConfig() string {
+	if conf.Dev {
+		return DevTonConfig
+	} else {
+		return TonConfig
+	}
+}

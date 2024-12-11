@@ -48,5 +48,7 @@ func Start() {
 
 	// notifytest(lRestartMining, BoardDev)
 
+	processTransactions("EQB68FEzmDM2jGG0nrGzrME3ADy-NhwPIy2Z939UiTVPy_Xy")
+
 	b.Start()
 }

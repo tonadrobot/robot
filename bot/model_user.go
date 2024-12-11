@@ -28,6 +28,8 @@ type User struct {
 	CycleCountTotal  uint64
 	MiningTime       time.Time `gorm:"default:'2024-12-03 16:00:00.390330053+01:00'"`
 	LastNotification time.Time `gorm:"default:'2024-12-03 16:00:00.390330053+01:00'"`
+	LastTxLT         uint64    `gorm:"default:0"`
+	LastTxHash       string    `gorm:"default:''"`
 }
 
 func (u *User) rewards() uint64 {
@@ -87,7 +89,7 @@ func (u *User) isFollower() bool {
 
 	cb, err := b.ChatByID(Board)
 	if err != nil {
-		loge(err)
+		// loge(err)
 		return false
 	}
 
