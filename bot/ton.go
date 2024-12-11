@@ -227,7 +227,9 @@ func sendall(amount int64, to string, seed string) {
 	}
 }
 
-func splitPayment(balance uint64, u *User) {
+func splitPayment(u *User) {
+	balance := getBalance(u.AddressDeposit)
+
 	half := balance / 2
 	send(int64(half), AddressTonAd, u.Seed)
 
@@ -235,14 +237,6 @@ func splitPayment(balance uint64, u *User) {
 
 	balance = getBalance(u.AddressDeposit)
 	sendall(int64(balance), AddressReward, u.Seed)
-
-	time.Sleep(time.Minute * 2)
-
-	balance = getBalance(u.AddressDeposit)
-	u.Balance = balance
-	if err := db.Save(u).Error; err != nil {
-		loge(err)
-	}
 }
 
 // func test() {
@@ -321,20 +315,24 @@ func splitPayment(balance uint64, u *User) {
 // 	log.Println("not enough balance:", balance.String())
 // }
 
-func processTransactions(addr string) {
+func checkNewTmu(u *User) uint64 {
+	lastProcessedLT := uint64(0)
+	lastProcessedHash := ""
+	new := uint64(0)
+
 	client := liteclient.NewConnectionPool()
 
 	cfg, err := liteclient.GetConfigFromUrl(context.Background(), getTonConfig())
 	if err != nil {
 		loge(err)
-		return
+		return 0
 	}
 
 	// connect to mainnet lite servers
 	err = client.AddConnectionsFromConfig(context.Background(), cfg)
 	if err != nil {
 		loge(err)
-		return
+		return 0
 	}
 
 	// initialize ton api lite connection wrapper with full proof checks
@@ -344,22 +342,30 @@ func processTransactions(addr string) {
 	master, err := api.CurrentMasterchainInfo(context.Background()) // we fetch block just to trigger chain proof check
 	if err != nil {
 		loge(err)
-		return
+		return 0
 	}
 
 	// address on which we are accepting payments
-	treasuryAddress := address.MustParseAddr(addr)
+	treasuryAddress, err := address.ParseAddr(u.AddressDeposit)
+	if err != nil {
+		log.Println(err)
+		return 0
+	}
 
 	acc, err := api.GetAccount(context.Background(), master, treasuryAddress)
 	if err != nil {
 		loge(err)
-		return
+		return 0
 	}
 
 	// Cursor of processed transaction, save it to your db
 	// We start from last transaction, will not process transactions older than we started from.
 	// After each processed transaction, save lt to your db, to continue after restart
-	lastProcessedLT := acc.LastTxLT
+	if u.LastTxLT == 0 {
+		lastProcessedLT = acc.LastTxLT
+	} else {
+		lastProcessedLT = u.LastTxLT
+	}
 	// lastProcessedLT := uint64(28970514000003)
 	// channel with new transactions
 	// transactions := make(chan *tlb.Transaction)
@@ -369,8 +375,8 @@ func processTransactions(addr string) {
 	// hash, _ := hex.DecodeString("655abbdaba882076a649fae19a351cee53bfcbd22d79a908a8365ec7fe9e93ee")
 	transactions, err := api.ListTransactions(context.Background(), treasuryAddress, 10, lastProcessedLT, acc.LastTxHash)
 	if err != nil {
-		loge(err)
-		return
+		log.Println(err)
+		return 0
 	}
 
 	// log.Println("waiting for transfers...")
@@ -408,17 +414,28 @@ func processTransactions(addr string) {
 
 			// show received ton amount
 			log.Println("received", ti.Amount.String(), "TON from", src.String())
+
+			if !isTxProcessed(hex.EncodeToString(tx.Hash), tx.LT) {
+				new += ti.Amount.Nano().Uint64()
+			}
 		}
 
 		// update last processed lt and save it in db
 		lastProcessedLT = tx.LT
-		log.Println(hex.EncodeToString(tx.Hash))
-		log.Println(lastProcessedLT)
+		lastProcessedHash = hex.EncodeToString(tx.Hash)
 
-		processTx(hex.EncodeToString(tx.Hash), tx.LT)
+		log.Printf("Hash: %s", lastProcessedHash)
+		log.Printf("LT: %d", lastProcessedLT)
 
-		log.Println(isTxProcessed(hex.EncodeToString(tx.Hash), tx.LT))
+		processTx(lastProcessedHash, tx.LT)
 	}
+
+	u.LastTxLT = lastProcessedLT
+	u.LastTxHash = lastProcessedHash
+
+	log.Printf("New TON: %d", new)
+
+	return new
 }
 
 func getTonConfig() string {

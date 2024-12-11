@@ -9,6 +9,8 @@ const (
 
 	Group = int64(-1002257590502)
 
+	GroupHall = int64(-1002405271136)
+
 	Board = int64(-1001717915246)
 
 	BoardDev = int64(-1002261097117)

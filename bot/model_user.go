@@ -1,6 +1,7 @@
 package bot
 
 import (
+	"fmt"
 	"log"
 	"time"
 
@@ -149,6 +150,43 @@ func (u *User) hasMigrated() bool {
 
 func (u *User) isActive() bool {
 	return time.Since(u.MiningTime).Minutes() <= 2280
+}
+
+func (u *User) processTmuPayments() bool {
+	new := checkNewTmu(u)
+	// checkNewTmu(u)
+
+	if new > 0 {
+		new *= 10
+		u.TMU += new
+		now := time.Now()
+		u.TimeLock = &now
+
+		if time.Since(u.LastUpdated).Hours() > (60 * 24) {
+			u.LastUpdated = now
+		}
+
+		if err := db.Save(u).Error; err != nil {
+			loge(err)
+		}
+
+		if u.ReferrerID != nil {
+			r := u.Referrer
+			r.TMU += (uint64(new) * 25 / 100)
+			if err := db.Save(r).Error; err != nil {
+				loge(err)
+			}
+			notify(fmt.Sprintf(lNewRefTmu, float64((new*25/100))/float64(Mul9)), r.TelegramId)
+		}
+
+		notify(fmt.Sprintf(lNewMint, float64(new)/float64(Mul9)), GroupHall)
+
+		go splitPayment(u)
+
+		return true
+	}
+
+	return false
 }
 
 func getUserOrCreate(c telebot.Context) (*User, error) {

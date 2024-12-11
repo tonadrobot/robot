@@ -21,7 +21,6 @@ func processTx(hash string, lt uint64) {
 func isTxProcessed(hash string, lt uint64) bool {
 	t := &Transaction{}
 	if res := db.First(t, &Transaction{TxHash: hash, TxLT: lt}); res.Error != nil {
-		loge(res.Error)
 		return false
 	}
 
