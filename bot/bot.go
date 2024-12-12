@@ -35,9 +35,9 @@ func Start() {
 
 	logs("Bot started successfully. 🚀")
 
-	var users []*User
-	db.Find(&users)
-	counter := 0
+	// var users []*User
+	// db.Find(&users)
+	// counter := 0
 
 	// for _, u := range users {
 	// 	if !u.hasMigrated() {
@@ -46,11 +46,11 @@ func Start() {
 	// 	}
 	// }
 
-	for _, u := range users {
-		u.processTmuPayments()
-		counter++
-		log.Printf("%d Not: %s", counter, u.Name)
-	}
+	// for _, u := range users {
+	// 	u.processTmuPayments()
+	// 	counter++
+	// 	log.Printf("%d Not: %s", counter, u.Name)
+	// }
 
 	// notifytest(lRestartMining, BoardDev)
 

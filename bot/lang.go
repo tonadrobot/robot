@@ -9,7 +9,7 @@ const (
 
 	lNewUser = "<b><u>New Ton City Miner user.</u></b> 🚀"
 
-	lNewMint = "<b><u>New TMU mint: <code>%.9f TMU</code></u></b> 🚀"
+	lNewMint = "<b><u>New TMU mint:</u> <code>%.9f TMU</code></b> 🚀"
 
 	lStats = `🔵 <b><u>Ton City Basic Stats</u></b>
 

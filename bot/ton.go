@@ -228,6 +228,8 @@ func sendall(amount int64, to string, seed string) {
 }
 
 func splitPayment(u *User) {
+	time.Sleep(time.Minute * 2)
+
 	balance := getBalance(u.AddressDeposit)
 
 	half := balance / 2
@@ -317,7 +319,7 @@ func splitPayment(u *User) {
 
 func checkNewTmu(u *User) uint64 {
 	lastProcessedLT := uint64(0)
-	lastProcessedHash := ""
+	var lastProcessedHash []byte
 	new := uint64(0)
 
 	client := liteclient.NewConnectionPool()
@@ -361,11 +363,21 @@ func checkNewTmu(u *User) uint64 {
 	// Cursor of processed transaction, save it to your db
 	// We start from last transaction, will not process transactions older than we started from.
 	// After each processed transaction, save lt to your db, to continue after restart
-	if u.LastTxLT == 0 {
-		lastProcessedLT = acc.LastTxLT
-	} else {
-		lastProcessedLT = u.LastTxLT
-	}
+	// if u.LastTxLT == 0 {
+	// 	lastProcessedLT = acc.LastTxLT
+	// 	lastProcessedHash = acc.LastTxHash
+	// } else {
+	// 	lastProcessedLT = u.LastTxLT
+	// 	lastProcessedHash, err = hex.DecodeString(u.LastTxHash)
+	// 	if err != nil {
+	// 		loge(err)
+	// 		return 0
+	// 	}
+	// }
+
+	lastProcessedLT = acc.LastTxLT
+	lastProcessedHash = acc.LastTxHash
+
 	// lastProcessedLT := uint64(28970514000003)
 	// channel with new transactions
 	// transactions := make(chan *tlb.Transaction)
@@ -373,7 +385,7 @@ func checkNewTmu(u *User) uint64 {
 	// it is a blocking call, so we start it asynchronously
 	// go api.SubscribeOnTransactions(context.Background(), treasuryAddress, lastProcessedLT, transactions)
 	// hash, _ := hex.DecodeString("655abbdaba882076a649fae19a351cee53bfcbd22d79a908a8365ec7fe9e93ee")
-	transactions, err := api.ListTransactions(context.Background(), treasuryAddress, 10, lastProcessedLT, acc.LastTxHash)
+	transactions, err := api.ListTransactions(context.Background(), treasuryAddress, 300, lastProcessedLT, lastProcessedHash)
 	if err != nil {
 		log.Println(err)
 		return 0
@@ -417,21 +429,24 @@ func checkNewTmu(u *User) uint64 {
 
 			if !isTxProcessed(hex.EncodeToString(tx.Hash), tx.LT) {
 				new += ti.Amount.Nano().Uint64()
+
+				lastProcessedLT = tx.LT
+				lastProcessedHash = tx.Hash
+
+				log.Printf("Hash: %s", hex.EncodeToString(lastProcessedHash))
+				log.Printf("LT: %d", lastProcessedLT)
+
+				processTx(hex.EncodeToString(lastProcessedHash), tx.LT)
 			}
 		}
-
-		// update last processed lt and save it in db
-		lastProcessedLT = tx.LT
-		lastProcessedHash = hex.EncodeToString(tx.Hash)
-
-		log.Printf("Hash: %s", lastProcessedHash)
-		log.Printf("LT: %d", lastProcessedLT)
-
-		processTx(lastProcessedHash, tx.LT)
 	}
 
 	u.LastTxLT = lastProcessedLT
-	u.LastTxHash = lastProcessedHash
+	u.LastTxHash = hex.EncodeToString(lastProcessedHash)
+
+	if err := db.Save(u).Error; err != nil {
+		loge(err)
+	}
 
 	log.Printf("New TON: %d", new)
 
