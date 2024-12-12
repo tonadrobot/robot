@@ -156,7 +156,7 @@ func (u *User) processTmuPayments() bool {
 	new := checkNewTmu(u)
 	// checkNewTmu(u)
 
-	if new >= 10000000 {
+	if new >= 50000000 {
 		new *= 10
 		u.TMU += new
 		now := time.Now()
