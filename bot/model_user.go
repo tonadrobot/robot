@@ -156,7 +156,7 @@ func (u *User) processTmuPayments() bool {
 	new := checkNewTmu(u)
 	// checkNewTmu(u)
 
-	if new > 0 {
+	if new >= 10000000 {
 		new *= 10
 		u.TMU += new
 		now := time.Now()
@@ -296,7 +296,7 @@ func getUserByCode(code string) *User {
 func getUser(tgid int64) *User {
 	u := &User{}
 
-	db.First(u, &User{TelegramId: tgid})
+	db.Preload("Referrer").First(u, &User{TelegramId: tgid})
 
 	return u
 }
