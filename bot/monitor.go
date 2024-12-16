@@ -94,7 +94,7 @@ func (m *Monitor) start() {
 	for {
 		m.loadMiners()
 
-		m.sendNotifications()
+		// m.sendNotifications()
 
 		time.Sleep(time.Second * MonitorTick)
 	}

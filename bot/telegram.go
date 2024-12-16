@@ -54,7 +54,7 @@ func notifystart(msg string, tgid int64) {
 
 func getMiningButton() *telebot.ReplyMarkup {
 	rm := &telebot.ReplyMarkup{}
-	btn := rm.URL("⚪️ Restart Mining", "https://t.me/TonCityRobot/miner?startapp=restart")
+	btn := rm.URL("⚪️ Restart Mining", "https://t.me/FrenlyRobot/miner?startapp=restart")
 
 	rm.Inline(
 		rm.Row(btn),
@@ -65,7 +65,7 @@ func getMiningButton() *telebot.ReplyMarkup {
 
 func getRestartButton() *telebot.ReplyMarkup {
 	rm := &telebot.ReplyMarkup{}
-	btn := rm.URL("⚪️ Restart Mining", "https://t.me/DevTonCityBoard/6")
+	btn := rm.URL("⚪️ Restart Mining", "https://t.me/DevFrenlyNews/12")
 
 	rm.Inline(
 		rm.Row(btn),
@@ -76,7 +76,7 @@ func getRestartButton() *telebot.ReplyMarkup {
 
 func getStartButton() *telebot.ReplyMarkup {
 	rm := &telebot.ReplyMarkup{}
-	btn := rm.URL("⚪️ Start Mining TON", "https://t.me/TonCityRobot/miner")
+	btn := rm.URL("⚪️ Start Mining TON", "https://t.me/FrenlyRobot/miner")
 
 	rm.Inline(
 		rm.Row(btn),
