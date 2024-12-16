@@ -96,7 +96,7 @@ func (u *User) isFollower() bool {
 
 	cm, err := b.ChatMemberOf(cb, ut)
 	if err != nil {
-		loge(err)
+		// loge(err)
 		return false
 	}
 
@@ -118,7 +118,7 @@ func (u *User) isMember() bool {
 
 	cb, err := b.ChatByID(Group)
 	if err != nil {
-		loge(err)
+		// loge(err)
 		return false
 	}
 
